@@ -1,4 +1,4 @@
-# DESIGN THINKING CANVAS
+ok we apply the as pdf says this exactly # DESIGN THINKING CANVAS
 ## Maple Family Health - Clinic Appointment Booking System
 
 **COMM 394 - Coding Literacy for Managers**  

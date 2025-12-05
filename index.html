@@ -22,6 +22,7 @@
                     <input type="text" id="searchPatientId" placeholder="123456" maxlength="6">
                     <button type="button" id="searchPatientBtn" class="btn-secondary">Search Patient</button>
                 </div>
+                <div id="patientSearchResults" style="display: none; margin-top: 15px;"></div>
             </div>
         </section>
 
@@ -115,7 +116,7 @@
 
         <!-- Daily Appointment Dashboard -->
         <section class="dashboard">
-            <h2>Daily Appointment Dashboard</h2>
+            <h2>Appointment Dashboard</h2>
             
             <div class="filter-section">
                 <h3>Filter & Sort</h3>
@@ -132,8 +133,8 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="filterDate">Filter by Date:</label>
-                        <input type="date" id="filterDate">
+                        <label for="filterDate">Filter by Date: (Optional)</label>
+                        <input type="date" id="filterDate" placeholder="All dates">
                     </div>
 
                     <div class="button-group">
@@ -145,7 +146,7 @@
             </div>
 
             <div class="appointments-count">
-                <p id="appointmentCount">Appointments today: <span id="countNumber">0</span></p>
+                <p id="appointmentCount">Total appointments: <span id="countNumber">0</span></p>
                 <p id="lastUpdated" style="font-size: 12px; opacity: 0.8; margin-top: 5px;"></p>
             </div>
 

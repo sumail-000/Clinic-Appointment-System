@@ -42,8 +42,9 @@ function generateAppointmentId() {
 
 // Set today's date as default in filter
 function setTodayAsDefaultDate() {
-    const today = new Date().toISOString().split('T')[0];
-    document.getElementById('filterDate').value = today;
+    // Don't set default date - let users see all appointments
+    // const today = new Date().toISOString().split('T')[0];
+    // document.getElementById('filterDate').value = today;
 }
 
 // Initialize all event listeners
@@ -192,9 +193,10 @@ function validateForm(data) {
     return true;
 }
 
-// Check for appointment conflicts
+// Check for appointment conflicts (PDF Requirement: Same Patient ID + Same Doctor + Same Date + Same Time)
 function checkConflict(newAppointment) {
     const conflict = appointments.find(apt => 
+        apt.patientId === newAppointment.patientId &&
         apt.doctor === newAppointment.doctor &&
         apt.date === newAppointment.date &&
         apt.time === newAppointment.time
@@ -226,31 +228,117 @@ function clearForm() {
     document.getElementById('priority').value = 'Routine';
 }
 
-// Search for returning patient (Custom Feature 1)
+// Search for returning patient (Custom Feature 1 - Enhanced)
 function searchPatient() {
     const searchId = document.getElementById('searchPatientId').value.trim();
+    const resultsContainer = document.getElementById('patientSearchResults');
     
     if (!searchId) {
         alert('Please enter a Patient ID to search');
         return;
     }
     
-    // Search for patient in appointments
-    const foundPatient = appointments.find(apt => apt.patientId === searchId);
+    // Search for ALL patients with this ID (handle multiple matches)
+    const foundPatients = appointments.filter(apt => apt.patientId === searchId);
     
-    if (foundPatient) {
-        // Auto-fill form fields
-        document.getElementById('patientName').value = foundPatient.patientName;
-        document.getElementById('dob').value = foundPatient.dob;
-        document.getElementById('patientId').value = foundPatient.patientId;
-        document.getElementById('contact').value = foundPatient.contact;
-        document.getElementById('email').value = foundPatient.email;
-        document.getElementById('allergies').value = foundPatient.allergies;
-        
+    // Remove duplicates based on patient details (same name + DOB = same person)
+    const uniquePatients = [];
+    foundPatients.forEach(apt => {
+        const exists = uniquePatients.find(p => 
+            p.patientName === apt.patientName && 
+            p.dob === apt.dob
+        );
+        if (!exists) {
+            uniquePatients.push(apt);
+        }
+    });
+    
+    if (uniquePatients.length === 0) {
+        // No patient found
+        resultsContainer.style.display = 'none';
+        alert(`No patient found with ID: ${searchId}`);
+    } else if (uniquePatients.length === 1) {
+        // Single patient found - auto-fill directly
+        const patient = uniquePatients[0];
+        autoFillPatientInfo(patient);
+        resultsContainer.style.display = 'none';
         alert(`Patient found! Information has been auto-filled.`);
     } else {
-        alert(`No patient found with ID: ${searchId}`);
+        // Multiple patients found - show selection
+        displayPatientSelection(uniquePatients);
     }
+}
+
+// Auto-fill patient information into form
+function autoFillPatientInfo(patient) {
+    document.getElementById('patientName').value = patient.patientName;
+    document.getElementById('dob').value = patient.dob;
+    document.getElementById('patientId').value = patient.patientId;
+    document.getElementById('contact').value = patient.contact;
+    document.getElementById('email').value = patient.email;
+    document.getElementById('allergies').value = patient.allergies;
+}
+
+// Display patient selection when multiple matches found
+function displayPatientSelection(patients) {
+    const resultsContainer = document.getElementById('patientSearchResults');
+    
+    let html = '<h4>Multiple patients found. Please select:</h4>';
+    html += '<div class="patient-results-grid">';
+    
+    patients.forEach((patient, index) => {
+        // Get last visit details
+        const patientAppointments = appointments.filter(apt => 
+            apt.patientId === patient.patientId && 
+            apt.patientName === patient.patientName &&
+            apt.dob === patient.dob
+        );
+        
+        // Sort by date to get most recent
+        patientAppointments.sort((a, b) => {
+            const dateA = new Date(a.date);
+            const dateB = new Date(b.date);
+            return dateB - dateA;
+        });
+        
+        const lastAppointment = patientAppointments[0];
+        const lastVisitFormatted = new Date(lastAppointment.date + 'T00:00:00').toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+        });
+        
+        html += `
+            <div class="patient-result-item" onclick="selectPatient(${index})">
+                <strong>${patient.patientName}</strong>
+                <div class="patient-details">
+                    <span><strong>DOB:</strong> ${patient.dob}</span>
+                    <span><strong>Contact:</strong> ${patient.contact}</span>
+                    <span><strong>Doctor:</strong> ${lastAppointment.doctor}</span>
+                    <span><strong>Reason:</strong> ${lastAppointment.reason}</span>
+                    <span><strong>Last Visit:</strong> ${lastVisitFormatted}</span>
+                </div>
+            </div>
+        `;
+    });
+    
+    html += '</div>';
+    resultsContainer.innerHTML = html;
+    resultsContainer.style.display = 'block';
+    
+    // Store patients in global variable for selection
+    window.searchedPatients = patients;
+}
+
+// Select patient from search results
+function selectPatient(index) {
+    const patient = window.searchedPatients[index];
+    autoFillPatientInfo(patient);
+    
+    // Hide results
+    document.getElementById('patientSearchResults').style.display = 'none';
+    
+    alert(`Patient selected! Information has been auto-filled.`);
 }
 
 // Generate confirmation script (Custom Feature 2)
@@ -329,20 +417,6 @@ function displayAppointments() {
     filtered.forEach(apt => {
         const row = document.createElement('tr');
         
-        // Apply priority styling (Custom Feature 3)
-        if (apt.priority === 'Urgent') {
-            row.classList.add('priority-urgent');
-        }
-        
-        // Highlight newly added appointment
-        if (lastAddedAppointmentId && apt.id === lastAddedAppointmentId) {
-            row.classList.add('newly-added');
-            // Clear the highlight flag after animation
-            setTimeout(() => {
-                lastAddedAppointmentId = null;
-            }, 2000);
-        }
-        
         // Format date and time
         const dateObj = new Date(apt.date + 'T00:00:00');
         const formattedDate = dateObj.toLocaleDateString('en-US', { 
@@ -371,6 +445,20 @@ function displayAppointments() {
             <td>${apt.reason}</td>
             <td>${apt.priority}</td>
         `;
+        
+        // Apply priority styling AFTER innerHTML (Custom Feature 3)
+        if (apt.priority === 'Urgent') {
+            row.classList.add('priority-urgent');
+        }
+        
+        // Highlight newly added appointment AFTER innerHTML
+        if (lastAddedAppointmentId && apt.id === lastAddedAppointmentId) {
+            row.classList.add('newly-added');
+            // Clear the highlight flag after animation
+            setTimeout(() => {
+                lastAddedAppointmentId = null;
+            }, 2000);
+        }
         
         tbody.appendChild(row);
     });
@@ -435,10 +523,6 @@ function displaySortedAppointments(filtered) {
     filtered.forEach(apt => {
         const row = document.createElement('tr');
         
-        if (apt.priority === 'Urgent') {
-            row.classList.add('priority-urgent');
-        }
-        
         const dateObj = new Date(apt.date + 'T00:00:00');
         const formattedDate = dateObj.toLocaleDateString('en-US', { 
             month: 'short', 
@@ -466,6 +550,11 @@ function displaySortedAppointments(filtered) {
             <td>${apt.reason}</td>
             <td>${apt.priority}</td>
         `;
+        
+        // Apply priority styling AFTER innerHTML
+        if (apt.priority === 'Urgent') {
+            row.classList.add('priority-urgent');
+        }
         
         tbody.appendChild(row);
     });

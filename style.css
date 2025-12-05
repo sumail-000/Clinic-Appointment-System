@@ -75,6 +75,83 @@ h3 {
     margin-top: 15px;
 }
 
+/* Patient Search Results */
+#patientSearchResults {
+    background: white;
+    border: 2px solid #4a90e2;
+    border-radius: 8px;
+    padding: 20px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+#patientSearchResults h4 {
+    color: #2c5aa0;
+    margin-bottom: 15px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+/* Horizontal Grid Layout */
+.patient-results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+    gap: 15px;
+}
+
+.patient-result-item {
+    padding: 15px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #fafafa;
+}
+
+.patient-result-item:hover {
+    background: #e3f2fd;
+    border-color: #4a90e2;
+    box-shadow: 0 4px 12px rgba(74, 144, 226, 0.2);
+    transform: translateY(-2px);
+}
+
+.patient-result-item > strong {
+    color: #2c5aa0;
+    display: block;
+    margin-bottom: 10px;
+    font-size: 16px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.patient-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.patient-details span {
+    color: #555;
+    font-size: 13px;
+    padding: 4px 8px;
+    background: white;
+    border-radius: 4px;
+    border: 1px solid #e0e0e0;
+    white-space: nowrap;
+}
+
+.patient-details span strong {
+    color: #2c5aa0;
+    margin-right: 4px;
+}
+
+/* Responsive for smaller screens */
+@media (max-width: 768px) {
+    .patient-results-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
 /* Form Styles */
 .form-group {
     margin-bottom: 20px;
