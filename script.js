@@ -1,5 +1,6 @@
 // Global appointments array
 let appointments = [];
+let lastAddedAppointmentId = null;
 
 // Initialize app on page load
 document.addEventListener('DOMContentLoaded', function() {
@@ -66,6 +67,10 @@ function initializeEventListeners() {
     
     // Delete button
     document.getElementById('deleteBtn').addEventListener('click', deleteAppointment);
+    
+    // Auto-refresh: Listen for filter changes (live filtering)
+    document.getElementById('filterDoctor').addEventListener('change', displayAppointments);
+    document.getElementById('filterDate').addEventListener('change', displayAppointments);
 }
 
 // Handle form submission
@@ -113,12 +118,20 @@ function handleFormSubmit(e) {
     appointments.push(appointment);
     saveAppointments();
     
+    // Store the ID of newly added appointment for highlighting
+    lastAddedAppointmentId = appointment.id;
+    
     // Show success message
     alert('Appointment saved successfully. Ready for next call.');
     
     // Clear form and refresh display
     clearForm();
     displayAppointments();
+    
+    // Scroll to dashboard to show the new appointment
+    setTimeout(() => {
+        document.querySelector('.dashboard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
 }
 
 // Validate form data
@@ -302,6 +315,11 @@ function displayAppointments() {
     // Update count
     document.getElementById('countNumber').textContent = filtered.length;
     
+    // Update last refreshed time
+    const now = new Date();
+    const timeString = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', second: '2-digit' });
+    document.getElementById('lastUpdated').textContent = `Last updated: ${timeString}`;
+    
     // Display appointments
     if (filtered.length === 0) {
         tbody.innerHTML = '<tr><td colspan="10" class="empty-state"><p>No appointments found for the selected filters.</p></td></tr>';
@@ -314,6 +332,15 @@ function displayAppointments() {
         // Apply priority styling (Custom Feature 3)
         if (apt.priority === 'Urgent') {
             row.classList.add('priority-urgent');
+        }
+        
+        // Highlight newly added appointment
+        if (lastAddedAppointmentId && apt.id === lastAddedAppointmentId) {
+            row.classList.add('newly-added');
+            // Clear the highlight flag after animation
+            setTimeout(() => {
+                lastAddedAppointmentId = null;
+            }, 2000);
         }
         
         // Format date and time

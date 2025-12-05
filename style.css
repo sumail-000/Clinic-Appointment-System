@@ -381,3 +381,17 @@ tbody tr {
     animation: fadeIn 0.3s ease;
 }
 
+/* Highlight animation for newly added/updated rows */
+@keyframes highlightNew {
+    0% {
+        background-color: #d4edda;
+    }
+    100% {
+        background-color: transparent;
+    }
+}
+
+tbody tr.newly-added {
+    animation: highlightNew 2s ease;
+}
+
