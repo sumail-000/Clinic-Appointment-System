@@ -1,0 +1,383 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+    color: #333;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+/* Header */
+header {
+    background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+    color: white;
+    padding: 30px;
+    text-align: center;
+}
+
+header h1 {
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+/* Section Styles */
+section {
+    padding: 30px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+section:last-child {
+    border-bottom: none;
+}
+
+h2 {
+    color: #2c5aa0;
+    font-size: 24px;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 3px solid #4a90e2;
+}
+
+h3 {
+    color: #555;
+    font-size: 18px;
+    margin-bottom: 15px;
+}
+
+.section-description {
+    color: #666;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+/* Patient Lookup Section */
+.patient-lookup {
+    background: #f0f7ff;
+}
+
+.lookup-form {
+    margin-top: 15px;
+}
+
+/* Form Styles */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.required {
+    color: #e74c3c;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #4a90e2;
+}
+
+.form-group textarea {
+    resize: vertical;
+}
+
+.inline-group {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.inline-group label {
+    margin-bottom: 0;
+    white-space: nowrap;
+    min-width: 150px;
+}
+
+.inline-group input {
+    flex: 1;
+}
+
+/* Button Styles */
+.button-group {
+    display: flex;
+    gap: 15px;
+    margin-top: 25px;
+    flex-wrap: wrap;
+}
+
+button {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.btn-primary {
+    background: #27ae60;
+    color: white;
+    flex: 1;
+    min-width: 150px;
+}
+
+.btn-primary:hover {
+    background: #229954;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+}
+
+.btn-secondary {
+    background: #4a90e2;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #357abd;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+}
+
+.btn-clear {
+    background: #95a5a6;
+    color: white;
+}
+
+.btn-clear:hover {
+    background: #7f8c8d;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(149, 165, 166, 0.3);
+}
+
+.btn-danger {
+    background: #e74c3c;
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #c0392b;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+}
+
+/* Dashboard Styles */
+.dashboard {
+    background: #fafafa;
+}
+
+.filter-section {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.filter-controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: end;
+}
+
+.filter-controls .button-group {
+    grid-column: 1 / -1;
+    margin-top: 10px;
+}
+
+.appointments-count {
+    background: #4a90e2;
+    color: white;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.appointments-count p {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+#countNumber {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+/* Table Styles */
+.table-container {
+    overflow-x: auto;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 1000px;
+}
+
+thead {
+    background: #34495e;
+    color: white;
+}
+
+thead th {
+    padding: 15px 10px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+tbody tr {
+    border-bottom: 1px solid #e0e0e0;
+    transition: background-color 0.2s ease;
+}
+
+tbody tr:hover {
+    background: #f5f5f5;
+}
+
+tbody td {
+    padding: 12px 10px;
+    font-size: 13px;
+    color: #555;
+}
+
+/* Priority Styling */
+tbody tr.priority-urgent {
+    background: #ffe6e6 !important;
+}
+
+tbody tr.priority-urgent:hover {
+    background: #ffd4d4 !important;
+}
+
+tbody tr.priority-urgent td {
+    font-weight: 600;
+}
+
+/* Delete Section */
+.delete-section {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
+    section {
+        padding: 20px;
+    }
+
+    header h1 {
+        font-size: 22px;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+
+    .filter-controls {
+        grid-template-columns: 1fr;
+    }
+
+    .button-group {
+        flex-direction: column;
+    }
+
+    .button-group button {
+        width: 100%;
+    }
+
+    .inline-group {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .inline-group label {
+        min-width: auto;
+    }
+
+    table {
+        font-size: 12px;
+    }
+
+    thead th,
+    tbody td {
+        padding: 8px 5px;
+    }
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: #999;
+}
+
+.empty-state p {
+    font-size: 16px;
+}
+
+/* Animation for new rows */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+tbody tr {
+    animation: fadeIn 0.3s ease;
+}
+
