@@ -1,6 +1,7 @@
 // Global appointments array
 let appointments = [];
 let lastAddedAppointmentId = null;
+let viewMode = 'today'; // 'today' or 'all'
 
 // Initialize app on page load
 document.addEventListener('DOMContentLoaded', function() {
@@ -72,6 +73,10 @@ function initializeEventListeners() {
     // Auto-refresh: Listen for filter changes (live filtering)
     document.getElementById('filterDoctor').addEventListener('change', displayAppointments);
     document.getElementById('filterDate').addEventListener('change', displayAppointments);
+    
+    // Quick filter buttons
+    document.getElementById('todayBtn').addEventListener('click', showTodayAppointments);
+    document.getElementById('showAllBtn').addEventListener('click', showAllAppointments);
 }
 
 // Handle form submission
@@ -376,21 +381,58 @@ function generateConfirmationScript() {
     alert(script);
 }
 
+// Show today's appointments
+function showTodayAppointments() {
+    viewMode = 'today';
+    
+    // Update button states
+    document.getElementById('todayBtn').classList.add('active');
+    document.getElementById('showAllBtn').classList.remove('active');
+    
+    // Clear date filter when viewing today
+    document.getElementById('filterDate').value = '';
+    
+    // Update display
+    displayAppointments();
+}
+
+// Show all appointments
+function showAllAppointments() {
+    viewMode = 'all';
+    
+    // Update button states
+    document.getElementById('todayBtn').classList.remove('active');
+    document.getElementById('showAllBtn').classList.add('active');
+    
+    // Update display
+    displayAppointments();
+}
+
 // Display appointments in table
 function displayAppointments() {
     const tbody = document.getElementById('appointmentsTableBody');
     const filterDoctor = document.getElementById('filterDoctor').value;
     const filterDate = document.getElementById('filterDate').value;
+    const today = new Date().toISOString().split('T')[0];
     
-    // Filter appointments
+    // Filter appointments based on view mode
     let filtered = appointments.filter(apt => {
         let matches = true;
         
+        // Apply view mode filter first (today vs all)
+        if (viewMode === 'today') {
+            if (apt.date !== today) {
+                matches = false;
+            }
+        }
+        
+        // Then apply doctor filter
         if (filterDoctor && apt.doctor !== filterDoctor) {
             matches = false;
         }
         
-        if (filterDate && apt.date !== filterDate) {
+        // Then apply date filter (only if in 'all' mode)
+        if (viewMode === 'all' && filterDate && apt.date !== filterDate) {
             matches = false;
         }
         
@@ -400,8 +442,9 @@ function displayAppointments() {
     // Clear table
     tbody.innerHTML = '';
     
-    // Update count
-    document.getElementById('countNumber').textContent = filtered.length;
+    // Update count with appropriate label
+    const countLabel = viewMode === 'today' ? 'Appointments today' : 'Total appointments';
+    document.getElementById('appointmentCount').innerHTML = `${countLabel}: <span id="countNumber">${filtered.length}</span>`;
     
     // Update last refreshed time
     const now = new Date();
@@ -468,12 +511,19 @@ function displayAppointments() {
 function sortByTime() {
     const filterDoctor = document.getElementById('filterDoctor').value;
     const filterDate = document.getElementById('filterDate').value;
+    const today = new Date().toISOString().split('T')[0];
     
-    // Filter first
+    // Filter first based on view mode
     let filtered = appointments.filter(apt => {
         let matches = true;
+        
+        // Apply view mode filter
+        if (viewMode === 'today') {
+            if (apt.date !== today) matches = false;
+        }
+        
         if (filterDoctor && apt.doctor !== filterDoctor) matches = false;
-        if (filterDate && apt.date !== filterDate) matches = false;
+        if (viewMode === 'all' && filterDate && apt.date !== filterDate) matches = false;
         return matches;
     });
     
@@ -492,12 +542,19 @@ function sortByTime() {
 function sortByDoctor() {
     const filterDoctor = document.getElementById('filterDoctor').value;
     const filterDate = document.getElementById('filterDate').value;
+    const today = new Date().toISOString().split('T')[0];
     
-    // Filter first
+    // Filter first based on view mode
     let filtered = appointments.filter(apt => {
         let matches = true;
+        
+        // Apply view mode filter
+        if (viewMode === 'today') {
+            if (apt.date !== today) matches = false;
+        }
+        
         if (filterDoctor && apt.doctor !== filterDoctor) matches = false;
-        if (filterDate && apt.date !== filterDate) matches = false;
+        if (viewMode === 'all' && filterDate && apt.date !== filterDate) matches = false;
         return matches;
     });
     
@@ -513,7 +570,9 @@ function displaySortedAppointments(filtered) {
     const tbody = document.getElementById('appointmentsTableBody');
     tbody.innerHTML = '';
     
-    document.getElementById('countNumber').textContent = filtered.length;
+    // Update count with appropriate label
+    const countLabel = viewMode === 'today' ? 'Appointments today' : 'Total appointments';
+    document.getElementById('appointmentCount').innerHTML = `${countLabel}: <span id="countNumber">${filtered.length}</span>`;
     
     if (filtered.length === 0) {
         tbody.innerHTML = '<tr><td colspan="10" class="empty-state"><p>No appointments found for the selected filters.</p></td></tr>';

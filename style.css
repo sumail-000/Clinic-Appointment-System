@@ -286,6 +286,37 @@ button {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
+/* Quick Filter Buttons */
+.quick-filter-buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.quick-filter-buttons button {
+    flex: 1;
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    border: 2px solid #4a90e2;
+    background: white;
+    color: #4a90e2;
+    transition: all 0.3s ease;
+}
+
+.quick-filter-buttons button:hover {
+    background: #e3f2fd;
+    transform: translateY(-1px);
+}
+
+.quick-filter-buttons button.active {
+    background: #4a90e2;
+    color: white;
+    box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+}
+
 .filter-controls {
     display: grid;
     grid-template-columns: 1fr 1fr;
